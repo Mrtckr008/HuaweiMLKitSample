@@ -1,5 +1,6 @@
 package com.huawei.example.huaweimlkitsample
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.location.Criteria
 import android.location.Geocoder
@@ -7,6 +8,7 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.text.Html
 import androidx.appcompat.app.AppCompatActivity
+import com.huawei.example.huaweimlkitsample.MainActivity.Companion.selectedImageBitmap
 import com.huawei.hmf.tasks.Task
 import com.huawei.hms.mlsdk.MLAnalyzerFactory
 import com.huawei.hms.mlsdk.common.MLFrame
@@ -21,27 +23,32 @@ class LandmarkRecognitionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_landmark_recognization)
 
-        val imageBitmap=intent.extras?.getString("imageBitmap") as Bitmap?
-        landmark_recognition_image.setImageBitmap(imageBitmap)
-        landmarkAnalyzer(imageBitmap!!)
-        println("mcmc image ->$imageBitmap")
+        landmark_recognition_image.setImageBitmap(selectedImageBitmap)
+        selectedImageBitmap?.let { landmarkAnalyzer() }
+
+        open_translate_button.setOnClickListener {
+            val intentFromGallery = Intent(this, TranslateActivity::class.java)
+            startActivity(intentFromGallery)
+        }
     }
 
-    private fun landmarkAnalyzer(imageBitmap: Bitmap) {
+    private fun landmarkAnalyzer() {
         val settings = MLRemoteLandmarkAnalyzerSetting.Factory()
             .setLargestNumOfReturns(1)
             .setPatternType(MLRemoteLandmarkAnalyzerSetting.STEADY_PATTERN)
             .create()
         val analyzer = MLAnalyzerFactory.getInstance()
             .getRemoteLandmarkAnalyzer(settings)
+
         val mlFrame = MLFrame.Creator()
-            .setBitmap(imageBitmap).create()
+            .setBitmap(selectedImageBitmap).create()
         val task: Task<List<MLRemoteLandmark>> =
             analyzer.asyncAnalyseFrame(mlFrame)
 
         task.addOnSuccessListener {
             displaySuccess(it[0])
         }.addOnFailureListener {
+            println("mcmcmc error is -> ${it.message}, ${it.localizedMessage}")
            displayFailure()
         } }
 

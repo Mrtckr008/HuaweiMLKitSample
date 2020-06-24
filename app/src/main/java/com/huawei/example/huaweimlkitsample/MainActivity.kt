@@ -63,7 +63,6 @@ class MainActivity : AppCompatActivity() {
                     )
                 }
                 val intentFromCamera = Intent(this, LandmarkRecognitionActivity::class.java)
-                intent.putExtra("imageBitmap",selectedImageBitmap)
                 startActivity(intentFromCamera)
             }
         }
@@ -73,7 +72,6 @@ class MainActivity : AppCompatActivity() {
                 try {
                     selectedImageBitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, pickedImage)
                     val intentFromGallery = Intent(this, LandmarkRecognitionActivity::class.java)
-                    intentFromGallery.putExtra("imageBitmap", selectedImageBitmap)
                     startActivity(intentFromGallery)
                 } catch (e: IOException) {
                     e.printStackTrace()
