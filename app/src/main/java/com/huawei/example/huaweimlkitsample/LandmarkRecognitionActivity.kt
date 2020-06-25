@@ -33,7 +33,7 @@ class LandmarkRecognitionActivity : AppCompatActivity() {
     }
 
     private fun landmarkAnalyzer() {
-        val settings = MLRemoteLandmarkAnalyzerSetting.Factory()
+            val settings = MLRemoteLandmarkAnalyzerSetting.Factory()
             .setLargestNumOfReturns(1)
             .setPatternType(MLRemoteLandmarkAnalyzerSetting.STEADY_PATTERN)
             .create()
@@ -48,9 +48,9 @@ class LandmarkRecognitionActivity : AppCompatActivity() {
         task.addOnSuccessListener {
             displaySuccess(it[0])
         }.addOnFailureListener {
-            println("mcmcmc error is -> ${it.message}, ${it.localizedMessage}")
            displayFailure()
-        } }
+        }
+    }
 
     fun displaySuccess(landmark: MLRemoteLandmark) {
         if (landmark.landmark.contains("retCode") || landmark.landmark
@@ -89,6 +89,7 @@ class LandmarkRecognitionActivity : AppCompatActivity() {
             landmark_information_text.text = Html.fromHtml("<big><b>Landmark Information</b></big> <br><big><b>$landmarkName</b></big><br><b>Latitude: </b>$latitude<br><b>Longitude: </b>$longitude<br><b>Possibility: </b>%$possibility")
         }
     }
+
     private fun displayFailure() {
 
     }
