@@ -1,10 +1,11 @@
-package com.huawei.example.huaweimlkitsample
+package com.huawei.example.huaweimlkitsample.example1
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import com.huawei.example.huaweimlkitsample.R
 import com.huawei.hmf.tasks.Task
 import com.huawei.hms.mlsdk.langdetect.MLLangDetectorFactory
 import com.huawei.hms.mlsdk.langdetect.cloud.MLRemoteLangDetector

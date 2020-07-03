@@ -2,16 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.huawei.example.huaweimlkitsample">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -20,9 +13,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".TranslateActivity"></activity>
-        <activity android:name=".LandmarkRecognitionActivity"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".example2.ImageClassificationActivity" />
+        <activity android:name=".example2.FaceDetectionActivity" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".example1.TranslateActivity" />
+        <activity android:name=".example1.LandmarkRecognitionActivity" />
+        <activity android:name=".example2.Example2Activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

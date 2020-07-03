@@ -1,8 +1,6 @@
 package com.huawei.example.huaweimlkitsample
 
 import android.Manifest
-import android.R.attr
-import android.R.attr.bitmap
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -12,6 +10,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.huawei.example.huaweimlkitsample.example1.LandmarkRecognitionActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.IOException
 
@@ -25,10 +24,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        this@MainActivity.intent = intent
-        intent!!.extras
-
 
         take_picture_icon.setOnClickListener {
             if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -53,7 +48,6 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 100) {
             if (resultCode == Activity.RESULT_OK) { //  resim seçildiğinde yapılacaklar
-
                 selectedImageBitmap = if (data?.data == null) {
                     data?.extras!!["data"] as Bitmap?
                 } else {

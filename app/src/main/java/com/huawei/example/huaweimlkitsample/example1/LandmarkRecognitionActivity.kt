@@ -1,14 +1,11 @@
-package com.huawei.example.huaweimlkitsample
+package com.huawei.example.huaweimlkitsample.example1
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.location.Criteria
-import android.location.Geocoder
-import android.location.LocationManager
 import android.os.Bundle
 import android.text.Html
 import androidx.appcompat.app.AppCompatActivity
 import com.huawei.example.huaweimlkitsample.MainActivity.Companion.selectedImageBitmap
+import com.huawei.example.huaweimlkitsample.R
 import com.huawei.hmf.tasks.Task
 import com.huawei.hms.mlsdk.MLAnalyzerFactory
 import com.huawei.hms.mlsdk.common.MLFrame
