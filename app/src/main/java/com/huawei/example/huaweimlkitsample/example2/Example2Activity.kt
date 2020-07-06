@@ -70,6 +70,7 @@ class Example2Activity : AppCompatActivity() {
         if (requestCode == 100) {
             if (resultCode == Activity.RESULT_OK) { //  resim seçildiğinde yapılacaklar
                 selectedImageBitmap = data?.extras?.get("data") as Bitmap
+                selected_image.setImageBitmap(selectedImageBitmap)
                 performTextRecognitionOnCloud(selectedImageBitmap!!)
                 performTextRecognitionOnDevice(selectedImageBitmap!!)
                 performStaticImageClassificationOnDevice(selectedImageBitmap!!)
@@ -82,6 +83,7 @@ class Example2Activity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 val pickedImage: Uri? = data?.data
                 try {
+                    selected_image.setImageBitmap(MediaStore.Images.Media.getBitmap(this.contentResolver, pickedImage))
                     performTextRecognitionOnCloud(MediaStore.Images.Media.getBitmap(this.contentResolver, pickedImage))
                     performTextRecognitionOnDevice(MediaStore.Images.Media.getBitmap(this.contentResolver, pickedImage))
                     performStaticImageClassificationOnDevice(MediaStore.Images.Media.getBitmap(this.contentResolver, pickedImage))
