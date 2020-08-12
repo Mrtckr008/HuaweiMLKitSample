@@ -7,28 +7,22 @@ import android.view.View
 import com.huawei.hms.mlsdk.common.LensEngine
 import java.util.*
 
-
-class GraphicOverlay(
-    context: Context?,
-    attrs: AttributeSet?
-) :
-    View(context, attrs) {
+class CustomGraphicOverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
     private val mLock = Any()
     private var mPreviewWidth = 0
     private var mWidthScaleFactor = 1.0f
     private var mPreviewHeight = 0
     private var mHeightScaleFactor = 1.0f
     private var mFacing = LensEngine.BACK_LENS
-    private val mGraphics: MutableSet<Graphic> =
-        HashSet()
+    private val mGraphics: MutableSet<Graphic> = HashSet()
 
-    abstract class Graphic(private val mOverlay: GraphicOverlay) {
+    abstract class Graphic(private val mOverlay: CustomGraphicOverlayView) {
         abstract fun draw(canvas: Canvas?)
-        fun scaleX(horizontal: Float): Float {
+        private fun scaleX(horizontal: Float): Float {
             return horizontal * mOverlay.mWidthScaleFactor
         }
 
-        fun scaleY(vertical: Float): Float {
+        private fun scaleY(vertical: Float): Float {
             return vertical * mOverlay.mHeightScaleFactor
         }
 
@@ -43,11 +37,6 @@ class GraphicOverlay(
         fun translateY(y: Float): Float {
             return scaleY(y)
         }
-
-        fun postInvalidate() {
-            mOverlay.postInvalidate()
-        }
-
     }
 
     fun clear() {
@@ -57,11 +46,6 @@ class GraphicOverlay(
 
     fun add(graphic: Graphic) {
         synchronized(mLock) { mGraphics.add(graphic) }
-        postInvalidate()
-    }
-
-    fun remove(graphic: Graphic) {
-        synchronized(mLock) { mGraphics.remove(graphic) }
         postInvalidate()
     }
 
@@ -79,9 +63,9 @@ class GraphicOverlay(
         synchronized(mLock) {
             if (mPreviewWidth != 0 && mPreviewHeight != 0) {
                 mWidthScaleFactor =
-                    canvas.width.toFloat() / mPreviewWidth.toFloat()
+                    width.toFloat() / mPreviewWidth.toFloat()
                 mHeightScaleFactor =
-                    canvas.height.toFloat() / mPreviewHeight.toFloat()
+                    height.toFloat() / mPreviewHeight.toFloat()
             }
             for (graphic in mGraphics) {
                 graphic.draw(canvas)

@@ -5,15 +5,15 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
-import com.huawei.example.huaweimlkitsample.example3.camerautil.GraphicOverlay
+import com.huawei.example.huaweimlkitsample.example3.camerautil.CustomGraphicOverlayView
 import com.huawei.hms.mlsdk.face.MLFace
 import com.huawei.hms.mlsdk.face.MLFaceShape
 import java.text.DecimalFormat
 import java.util.*
 
 
-class MLFaceGraphic(overlay: GraphicOverlay, private val mFace: MLFace?): GraphicOverlay.Graphic(overlay) {
-    private val overlay: GraphicOverlay = overlay
+class DrawFaceGraphic(overlay: CustomGraphicOverlayView, private val mFace: MLFace?): CustomGraphicOverlayView.Graphic(overlay) {
+    private val overlay: CustomGraphicOverlayView = overlay
     private val facePositionPaint: Paint
     private val landmarkPaint: Paint
     private val boxPaint: Paint

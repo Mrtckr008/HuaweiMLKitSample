@@ -9,21 +9,20 @@ import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.huawei.example.huaweimlkitsample.R
-import com.huawei.example.huaweimlkitsample.example3.camerautil.GraphicOverlay
+import com.huawei.example.huaweimlkitsample.example3.camerautil.CameraSourcePreview
+import com.huawei.example.huaweimlkitsample.example3.camerautil.CustomGraphicOverlayView
 import com.huawei.hms.mlsdk.MLAnalyzerFactory
 import com.huawei.hms.mlsdk.common.LensEngine
 import com.huawei.hms.mlsdk.face.MLFaceAnalyzer
 import com.huawei.hms.mlsdk.face.MLFaceAnalyzerSetting
-import com.huawei.mlkit.face.demo.camera.CameraSourcePreview
 import java.io.IOException
 
-
-class LiveImageDetectionActivity : AppCompatActivity(),
+class FaceDetectionStreamActivity : AppCompatActivity(),
     CompoundButton.OnCheckedChangeListener {
     var analyzer: MLFaceAnalyzer? = null
     private var mLensEngine: LensEngine? = null
     private var mPreview: CameraSourcePreview? = null
-    private var mOverlay: GraphicOverlay? = null
+    private var mOverlay: CustomGraphicOverlayView? = null
     private var lensType = LensEngine.FRONT_LENS
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,18 +45,10 @@ class LiveImageDetectionActivity : AppCompatActivity(),
     }
 
     private fun requestCameraPermission() {
-        val permissions =
-            arrayOf(Manifest.permission.CAMERA)
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(
-                this,
-                Manifest.permission.CAMERA
-            )
+        val permissions = arrayOf(Manifest.permission.CAMERA)
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)
         ) {
-            ActivityCompat.requestPermissions(
-                this,
-                permissions,
-                CAMERA_PERMISSION_CODE
-            )
+            ActivityCompat.requestPermissions(this, permissions, CAMERA_PERMISSION_CODE)
             return
         }
     }
@@ -82,15 +73,12 @@ class LiveImageDetectionActivity : AppCompatActivity(),
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<String>,
-        grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         if (requestCode != CAMERA_PERMISSION_CODE) {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
             return
         }
-        if (grantResults.size != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             createLensEngine()
             return
         }
@@ -100,10 +88,7 @@ class LiveImageDetectionActivity : AppCompatActivity(),
         super.onSaveInstanceState(savedInstanceState)
     }
 
-    override fun onCheckedChanged(
-        buttonView: CompoundButton,
-        isChecked: Boolean
-    ) {
+    override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
         if (mLensEngine != null) {
             if (isChecked) {
                 lensType = LensEngine.FRONT_LENS
@@ -117,28 +102,24 @@ class LiveImageDetectionActivity : AppCompatActivity(),
     }
 
     private fun createFaceAnalyzer(): MLFaceAnalyzer? {
-        // todo step 2: add on-device face analyzer
         val setting = MLFaceAnalyzerSetting.Factory()
             .setFeatureType(MLFaceAnalyzerSetting.TYPE_FEATURES)
             .setPerformanceType(MLFaceAnalyzerSetting.TYPE_SPEED)
             .allowTracing()
             .create()
         analyzer = MLAnalyzerFactory.getInstance().getFaceAnalyzer(setting)
-        // finish
         analyzer!!.setTransactor(FaceAnalyzerTransactor(mOverlay!!))
         return analyzer
     }
 
     private fun createLensEngine() {
         val context = this.applicationContext
-        // todo step 3: add on-device lens engine
         mLensEngine = LensEngine.Creator(context, analyzer)
             .setLensType(lensType)
             .applyDisplayDimension(1600, 1024)
             .applyFps(25.0f)
             .enableAutomaticFocus(true)
             .create()
-        // finish
     }
 
     private fun startLensEngine() {
@@ -146,11 +127,7 @@ class LiveImageDetectionActivity : AppCompatActivity(),
             try {
                 mPreview!!.start(mLensEngine, mOverlay)
             } catch (e: IOException) {
-                Log.e(
-                    TAG,
-                    "Failed to start lens engine.",
-                    e
-                )
+                Log.e(TAG, "Failed to start lens engine.", e)
                 mLensEngine!!.release()
                 mLensEngine = null
             }

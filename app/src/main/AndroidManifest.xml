@@ -17,7 +17,7 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".example1.TranslateActivity" />
         <activity android:name=".example1.LandmarkRecognitionActivity" />
-        <activity android:name=".example3.LiveImageDetectionActivity">
+        <activity android:name=".example3.FaceDetectionStreamActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

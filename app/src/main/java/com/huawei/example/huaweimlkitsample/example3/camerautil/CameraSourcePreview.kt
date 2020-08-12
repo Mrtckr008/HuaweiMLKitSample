@@ -1,4 +1,4 @@
-package com.huawei.mlkit.face.demo.camera
+package com.huawei.example.huaweimlkitsample.example3.camerautil
 
 import android.content.Context
 import android.content.res.Configuration
@@ -7,23 +7,18 @@ import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.ViewGroup
-import com.huawei.example.huaweimlkitsample.example3.camerautil.GraphicOverlay
 import com.huawei.hms.mlsdk.common.LensEngine
 import java.io.IOException
 
-   class CameraSourcePreview(
-    private val mContext: Context,
-    attrs: AttributeSet?
-) :
-    ViewGroup(mContext, attrs) {
-    private val mSurfaceView: SurfaceView
+class CameraSourcePreview(private val mContext: Context, attrs: AttributeSet?) :
+       ViewGroup(mContext, attrs) {
+    private val mSurfaceView: SurfaceView = SurfaceView(mContext)
     private var mStartRequested = false
     private var mSurfaceAvailable = false
     private var mLensEngine: LensEngine? = null
-    private var mOverlay: GraphicOverlay? = null
+    private var mOverlay: CustomGraphicOverlayView? = null
 
-    @Throws(IOException::class)
-    fun start(lensEngine: LensEngine?) {
+    private fun start(lensEngine: LensEngine?) {
         if (lensEngine == null) {
             stop()
         }
@@ -34,8 +29,7 @@ import java.io.IOException
         }
     }
 
-    @Throws(IOException::class)
-    fun start(lensEngine: LensEngine?, overlay: GraphicOverlay?) {
+    fun start(lensEngine: LensEngine?, overlay: CustomGraphicOverlayView?) {
         mOverlay = overlay
         start(lensEngine)
     }
@@ -46,24 +40,14 @@ import java.io.IOException
         }
     }
 
-    fun release() {
-        if (mLensEngine != null) {
-            mLensEngine!!.release()
-            mLensEngine = null
-        }
-    }
-
-    @Throws(IOException::class)
     private fun startIfReady() {
         if (mStartRequested && mSurfaceAvailable) {
             mLensEngine!!.run(mSurfaceView.holder)
             if (mOverlay != null) {
                 val size = mLensEngine!!.displayDimension
-                val min = Math.min(size.width, size.height)
-                val max = Math.max(size.width, size.height)
+                val min = size.width.coerceAtMost(size.height)
+                val max = size.width.coerceAtLeast(size.height)
                 if (isPortraitMode) {
-                    // Swap width and height sizes when in portrait, since it will be rotated by
-                    // 90 degrees
                     mOverlay!!.setCameraInfo(min, max, mLensEngine!!.lensType)
                 } else {
                     mOverlay!!.setCameraInfo(max, min, mLensEngine!!.lensType)
@@ -80,11 +64,7 @@ import java.io.IOException
             try {
                 startIfReady()
             } catch (e: IOException) {
-                Log.e(
-                    TAG,
-                    "Could not start camera source.",
-                    e
-                )
+                Log.e(TAG, "Could not start camera source.", e)
             }
         }
 
@@ -92,22 +72,10 @@ import java.io.IOException
             mSurfaceAvailable = false
         }
 
-        override fun surfaceChanged(
-            holder: SurfaceHolder,
-            format: Int,
-            width: Int,
-            height: Int
-        ) {
-        }
+        override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}
     }
 
-    override fun onLayout(
-        changed: Boolean,
-        left: Int,
-        top: Int,
-        right: Int,
-        bottom: Int
-    ) {
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         var previewWidth = 320
         var previewHeight = 240
         if (mLensEngine != null) {
@@ -118,7 +86,6 @@ import java.io.IOException
             }
         }
 
-        // Swap width and height sizes when in portrait, since it will be rotated 90 degrees
         if (isPortraitMode) {
             val tmp = previewWidth
             previewWidth = previewHeight
@@ -133,10 +100,6 @@ import java.io.IOException
         val widthRatio = viewWidth.toFloat() / previewWidth.toFloat()
         val heightRatio = viewHeight.toFloat() / previewHeight.toFloat()
 
-        // To fill the view with the camera preview, while also preserving the correct aspect ratio,
-        // it is usually necessary to slightly oversize the child and to crop off portions along one
-        // of the dimensions.  We scale up based on the dimension requiring the most correction, and
-        // compute a crop offset for the other dimension.
         if (widthRatio > heightRatio) {
             childWidth = viewWidth
             childHeight = (previewHeight.toFloat() * widthRatio).toInt()
@@ -147,8 +110,9 @@ import java.io.IOException
             childXOffset = (childWidth - viewWidth) / 2
         }
         for (i in 0 until childCount) {
-            // One dimension will be cropped.  We shift child over or up by this offset and adjust
-            // the size to maintain the proper aspect ratio.
+            /*
+            childCount'a göre viewları uygun en boy oranına göre boyutunu ayarlıyoruz
+             */
             getChildAt(i).layout(
                 -1 * childXOffset, -1 * childYOffset,
                 childWidth - childXOffset, childHeight - childYOffset
@@ -157,16 +121,12 @@ import java.io.IOException
         try {
             startIfReady()
         } catch (e: IOException) {
-            Log.e(
-                TAG,
-                "Could not start camera source.",
-                e
-            )
+            Log.e(TAG, "Could not start camera source.", e)
         }
     }
 
     private val isPortraitMode: Boolean
-        private get() {
+        get() {
             val orientation = mContext.resources.configuration.orientation
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 return false
@@ -174,10 +134,7 @@ import java.io.IOException
             if (orientation == Configuration.ORIENTATION_PORTRAIT) {
                 return true
             }
-            Log.d(
-                TAG,
-                "isPortraitMode returning false by default"
-            )
+            Log.d(TAG, "isPortraitMode returning false by default")
             return false
         }
 
@@ -186,9 +143,7 @@ import java.io.IOException
     }
 
     init {
-        mSurfaceView = SurfaceView(mContext)
-        mSurfaceView.holder
-            .addCallback(SurfaceCallback())
+        mSurfaceView.holder.addCallback(SurfaceCallback())
         addView(mSurfaceView)
     }
 }
