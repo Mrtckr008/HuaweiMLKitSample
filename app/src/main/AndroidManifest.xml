@@ -13,12 +13,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".example2.ImageClassificationActivity" />
-        <activity android:name=".example2.FaceDetectionActivity" />
+        <activity android:name=".example2.Example2Activity"></activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".example1.TranslateActivity" />
         <activity android:name=".example1.LandmarkRecognitionActivity" />
-        <activity android:name=".example2.Example2Activity">
+        <activity android:name=".example3.LiveImageDetectionActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
